@@ -22,7 +22,7 @@ MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "face_landmarker.task
 # Default thresholds
 FACE_GRACE_PERIOD = 2.0       # seconds before flagging face not detected
 HEAD_TURN_THRESHOLD = 15.0    # degrees yaw
-HEAD_TURN_DURATION = 2.0      # seconds sustained turn before flagging
+HEAD_TURN_DURATION = 5.0     # seconds sustained turn before flagging
 
 
 def _estimate_yaw(landmarks, img_w, img_h):

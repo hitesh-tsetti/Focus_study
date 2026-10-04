@@ -74,7 +74,7 @@ function CameraFeed({ videoRef, faceWarning, lookingAway }) {
 }
 
 const MAX_TAB_INCIDENTS = 3;
-const TAB_GRACE_SECONDS = 10;
+const TAB_GRACE_SECONDS = 5;
 
 export default function ActiveSession() {
   const nav = useNavigate();
