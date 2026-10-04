@@ -1,0 +1,57 @@
+{
+  "session_id": "f2047d7d-36a5-4fd5-9d18-de4595a6f811",
+  "task": "hehe",
+  "planned_seconds": 3000,
+  "actual_seconds": 32,
+  "camera_on_screen_seconds": 32,
+  "camera_away_seconds": 0,
+  "distracting_seconds": 0,
+  "productive_seconds": 1,
+  "neutral_seconds": 16,
+  "strike_count": 0,
+  "strikes": [],
+  "app_summary": {
+    "Google Chrome": 17
+  },
+  "domain_summary": {
+    "docs.google.com": 1
+  },
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791116479.2176466,
+      "end": 1791116494.233749,
+      "duration": 15,
+      "start_fmt": "08:21"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "docs.google.com",
+      "category": "productive",
+      "start": 1791116494.233749,
+      "end": 1791116495.2342908,
+      "duration": 1,
+      "start_fmt": "08:21"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791116495.2342908,
+      "end": 1791116496.2364998,
+      "duration": 1,
+      "start_fmt": "08:21"
+    }
+  ],
+  "biggest_distraction": null,
+  "longest_continuous_distraction_seconds": 0,
+  "insights": [
+    "You were screen-directed for approximately 100% of the session."
+  ],
+  "saved_at": 1791116496.238365
+}

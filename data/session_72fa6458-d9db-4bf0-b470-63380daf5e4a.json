@@ -1,0 +1,86 @@
+{
+  "session_id": "72fa6458-d9db-4bf0-b470-63380daf5e4a",
+  "task": "CSE",
+  "planned_seconds": 3000,
+  "actual_seconds": 47,
+  "camera_on_screen_seconds": 32,
+  "camera_away_seconds": 15,
+  "distracting_seconds": 14,
+  "productive_seconds": 0,
+  "neutral_seconds": 28,
+  "strike_count": 1,
+  "strikes": [
+    {
+      "number": 1,
+      "reason": "looking_away",
+      "timestamp": 1791118617.9931178
+    }
+  ],
+  "app_summary": {
+    "Google Chrome": 43
+  },
+  "domain_summary": {
+    "Other (browser)": 28,
+    "reddit.com": 14
+  },
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791118602.7948143,
+      "end": 1791118624.6568766,
+      "duration": 22,
+      "start_fmt": "08:56"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "reddit.com",
+      "category": "distracting",
+      "start": 1791118624.6568766,
+      "end": 1791118638.3980446,
+      "duration": 14,
+      "start_fmt": "08:57"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791118638.3980446,
+      "end": 1791118641.946973,
+      "duration": 4,
+      "start_fmt": "08:57"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "reddit.com",
+      "category": "distracting",
+      "start": 1791118641.946973,
+      "end": 1791118642.5584345,
+      "duration": 1,
+      "start_fmt": "08:57"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791118642.5584345,
+      "end": 1791118645.6135104,
+      "duration": 3,
+      "start_fmt": "08:57"
+    }
+  ],
+  "biggest_distraction": "reddit.com",
+  "longest_continuous_distraction_seconds": 14,
+  "insights": [
+    "You spent 31% of this session on potentially distracting activity.",
+    "You had 1 focus strike during this session.",
+    "You were screen-directed for approximately 67% of the session."
+  ],
+  "saved_at": 1791118645.615095
+}
