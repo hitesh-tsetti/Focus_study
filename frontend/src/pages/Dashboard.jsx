@@ -19,11 +19,13 @@ const DISTRACTING_DOMAINS = [
   "youtube.com", "reddit.com", "twitter.com", "x.com", "instagram.com",
   "tiktok.com", "facebook.com", "netflix.com", "twitch.tv", "9gag.com",
   "tumblr.com", "snapchat.com", "threads.net", "pinterest.com", "hulu.com",
+  "discord.com",
 ];
 const PRODUCTIVE_DOMAINS = [
   "github.com", "stackoverflow.com", "docs.google.com", "google.com",
   "edx.org", "khanacademy.org", "npmjs.com", "pypi.org", "leetcode.com",
   "developer.mozilla.org", "wikipedia.org",
+  "chatgpt.com", "claude.ai", "openai.com",
 ];
 
 function domainColor(domain) {
@@ -90,6 +92,7 @@ export default function Dashboard() {
   const topApps = Object.entries(app_summary || {}).slice(0, 6);
   const allDomains = Object.entries(domain_summary || {}).sort((a, b) => b[1] - a[1]);
   const domainMax = allDomains[0]?.[1] || 1;
+  const domainTotal = allDomains.reduce((sum, [, s]) => sum + s, 0) || 1;
 
   return (
     <div className="page" style={{ maxWidth: 720 }}>
@@ -196,8 +199,8 @@ export default function Dashboard() {
             <div className="card">
               <div className="stack" style={{ gap: 16 }}>
                 {allDomains.map(([domain, secs]) => {
-                  const color = domainColor(domain);
-                  const pct = Math.round((secs / actual_seconds) * 100);
+                  const color = domain === "Other (browser)" ? "var(--text-dim)" : domainColor(domain);
+                  const pct = Math.round((secs / domainTotal) * 100);
                   return (
                     <div key={domain}>
                       <div className="row" style={{ marginBottom: 6 }}>

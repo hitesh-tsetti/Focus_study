@@ -1,15 +1,14 @@
 """
 Active application and browser domain tracker for Windows.
-Uses win32gui to get the foreground window title and process name.
-Browser domain is extracted by parsing the window title of known browsers.
-No screenshots, no keystrokes, no page content — title metadata only.
+Uses UI Automation (uiautomation) to read the real URL from the browser address bar.
+Falls back to window title keyword matching. Privacy-light: reads only the address bar,
+never page content, screenshots, or keystrokes.
 """
 
 import threading
 import time
-import re
+from urllib.parse import urlparse
 import psutil
-import ctypes
 from dataclasses import dataclass, field
 from collections import defaultdict
 from datetime import datetime
@@ -21,6 +20,12 @@ try:
     WIN32_AVAILABLE = True
 except ImportError:
     WIN32_AVAILABLE = False
+
+try:
+    import uiautomation as auto
+    UIA_AVAILABLE = True
+except ImportError:
+    UIA_AVAILABLE = False
 
 # Apps classified as productive, neutral, or distracting
 DISTRACTION_CATEGORIES = {
@@ -48,24 +53,28 @@ PRODUCTIVE_DOMAINS = {
     "developer.mozilla.org", "docs.python.org", "npmjs.com", "pypi.org",
     "leetcode.com", "hackerrank.com", "replit.com", "codepen.io",
     "overleaf.com", "wolframalpha.com",
+    "chatgpt.com", "claude.ai", "openai.com",
 }
 
 DISTRACTING_DOMAINS = {
     "youtube.com", "youtu.be", "reddit.com", "twitter.com", "x.com",
     "instagram.com", "tiktok.com", "facebook.com", "twitch.tv",
     "netflix.com", "hulu.com", "disneyplus.com", "9gag.com",
-    "buzzfeed.com", "imgur.com", "tumblr.com",
+    "buzzfeed.com", "imgur.com", "tumblr.com", "snapchat.com",
 }
 
 BROWSER_PROCESS_NAMES = {"chrome", "firefox", "msedge", "opera", "brave"}
 
-# Regex to extract domain from browser title bars
-# Chrome: "Page Title - Domain Name"  or  "youtube.com/... - Google Chrome"
-DOMAIN_PATTERNS = [
-    re.compile(r'(?:https?://)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(?:/[^\s]*)?'),
-]
+# URL prefixes that indicate an internal browser page (no domain to track)
+_INTERNAL_SCHEMES = (
+    "chrome://", "chrome-extension://", "edge://", "brave://",
+    "about:", "moz-extension://", "file://",
+)
 
-# Maps title keywords → canonical domain for sites that don't show their URL in the title
+# Prefixes stripped from hostnames to produce a clean domain
+_STRIP_HOST_PREFIXES = ("www.", "m.", "web.", "mobile.")
+
+# Maps title keywords → canonical domain (fallback when URL can't be read)
 TITLE_KEYWORD_TO_DOMAIN = {
     "instagram": "instagram.com",
     "tiktok": "tiktok.com",
@@ -85,7 +94,18 @@ TITLE_KEYWORD_TO_DOMAIN = {
     "google sheets": "docs.google.com",
     "github": "github.com",
     "stackoverflow": "stackoverflow.com",
+    "chatgpt": "chatgpt.com",
+    "openai": "chatgpt.com",
+    "claude": "claude.ai",
+    "whatsapp": "web.whatsapp.com",
+    "discord": "discord.com",
+    "slack": "slack.com",
+    "notion": "notion.so",
+    "figma": "figma.com",
 }
+
+# Placeholder used when we know it's a browser window but can't determine the domain
+OTHER_BROWSER = "Other (browser)"
 
 
 @dataclass
@@ -104,8 +124,32 @@ class ActivityEvent:
         return max(0.0, end - self.start_time)
 
 
+def _normalise_domain(url: str) -> Optional[str]:
+    """
+    Parse a URL and return a clean, normalised domain name.
+    Returns None for internal browser pages (chrome://, about:blank, etc.).
+    """
+    if not url:
+        return None
+    if any(url.startswith(s) for s in _INTERNAL_SCHEMES):
+        return None
+    if not url.startswith(("http://", "https://")):
+        url = "https://" + url
+    try:
+        host = urlparse(url).hostname or ""
+    except Exception:
+        return None
+    if not host or "." not in host:
+        return None
+    for prefix in _STRIP_HOST_PREFIXES:
+        if host.startswith(prefix):
+            host = host[len(prefix):]
+            break
+    return host if "." in host else None
+
+
 def _get_active_window_info():
-    """Return (app_name, process_name, window_title) or None."""
+    """Return (hwnd, proc_name, window_title) or None."""
     if not WIN32_AVAILABLE:
         return None
     try:
@@ -116,37 +160,56 @@ def _get_active_window_info():
         _, pid = win32process.GetWindowThreadProcessId(hwnd)
         proc = psutil.Process(pid)
         proc_name = proc.name().lower().replace(".exe", "")
-        return proc_name, title
+        return hwnd, proc_name, title
     except Exception:
         return None
 
 
+def _get_browser_url(hwnd: int, proc_name: str) -> Optional[str]:
+    """
+    Read the actual URL from the browser's address bar via UI Automation.
+    Returns the raw URL string or None if unavailable.
+    """
+    if not UIA_AVAILABLE:
+        return None
+    try:
+        ctrl = auto.ControlFromHandle(hwnd)
+        if proc_name in ("chrome", "msedge", "brave", "opera"):
+            addr = ctrl.EditControl(Name="Address and search bar")
+            if addr.Exists(0.1, 0):
+                val = addr.GetValuePattern().Value
+                return val or None
+        elif proc_name == "firefox":
+            for name in ("Search with Google or enter address", "Search or enter address"):
+                addr = ctrl.EditControl(Name=name)
+                if addr.Exists(0.1, 0):
+                    val = addr.GetValuePattern().Value
+                    return val or None
+            addr = ctrl.EditControl(AutomationId="urlbar-input")
+            if addr.Exists(0.1, 0):
+                val = addr.GetValuePattern().Value
+                return val or None
+    except Exception:
+        pass
+    return None
+
+
 def _extract_domain_from_title(title: str) -> Optional[str]:
     """
-    Try to extract a domain from a browser window title.
-    First checks explicit URL patterns, then falls back to title keyword matching
-    for sites like Instagram that only show a page title (not the URL).
+    Fallback: match known site names in the page title when the URL is unavailable.
+    Does NOT use regex pattern matching on the title to avoid false positives.
     """
-    for pattern in DOMAIN_PATTERNS:
-        m = pattern.search(title)
-        if m:
-            domain = m.group(1).lower()
-            if "." in domain and len(domain) > 4:
-                return domain
-
-    # Fallback: match known site names in the page title
     title_lower = title.lower()
     for keyword, domain in TITLE_KEYWORD_TO_DOMAIN.items():
         if keyword in title_lower:
             return domain
-
     return None
 
 
 def _classify_app(proc_name: str, domain: Optional[str]) -> str:
     name_lower = proc_name.lower()
 
-    if domain:
+    if domain and domain != OTHER_BROWSER:
         if any(d in domain for d in DISTRACTING_DOMAINS):
             return "distracting"
         if any(d in domain for d in PRODUCTIVE_DOMAINS):
@@ -156,7 +219,6 @@ def _classify_app(proc_name: str, domain: Optional[str]) -> str:
         if any(kw in name_lower for kw in keywords):
             return cat
 
-    # Default browser to neutral unless domain classifies it
     if name_lower in BROWSER_PROCESS_NAMES:
         return "neutral"
 
@@ -196,11 +258,11 @@ def _friendly_app_name(proc_name: str) -> str:
 
 class ActivityTracker:
     """
-    Polls the active window every second and records activity events.
+    Polls the active window every 0.5s and records activity events.
     Thread-safe; call start() / stop() around a session.
     """
 
-    def __init__(self, poll_interval=1.0, on_activity_change=None):
+    def __init__(self, poll_interval=0.5, on_activity_change=None):
         self.poll_interval = poll_interval
         self._events: list[ActivityEvent] = []
         self._current: Optional[ActivityEvent] = None
@@ -242,7 +304,6 @@ class ActivityTracker:
         with self._lock:
             events = list(self._events)
             if self._current:
-                # Include live event
                 events.append(self._current)
         return [
             {
@@ -281,15 +342,20 @@ class ActivityTracker:
         return dict(cats)
 
     def get_domain_summary(self):
-        """Returns dict of domain -> total seconds, for browser events."""
+        """
+        Returns dict of domain -> total seconds for browser events.
+        Browser time with no identifiable domain is recorded under OTHER_BROWSER
+        so the total never silently drops.
+        """
         domains: dict[str, float] = defaultdict(float)
         with self._lock:
             all_events = list(self._events)
             if self._current:
                 all_events.append(self._current)
         for e in all_events:
-            if e.domain:
-                domains[e.domain] += e.duration
+            if e.process_name in BROWSER_PROCESS_NAMES:
+                key = e.domain if e.domain else OTHER_BROWSER
+                domains[key] += e.duration
         return dict(sorted(domains.items(), key=lambda x: x[1], reverse=True))
 
     # ------------------------------------------------------------------
@@ -301,9 +367,18 @@ class ActivityTracker:
             info = _get_active_window_info()
             changed_to = None
             if info:
-                proc_name, title = info
+                hwnd, proc_name, title = info
                 is_browser = proc_name.lower() in BROWSER_PROCESS_NAMES
-                domain = _extract_domain_from_title(title) if is_browser else None
+
+                domain = None
+                if is_browser:
+                    raw_url = _get_browser_url(hwnd, proc_name)
+                    if raw_url:
+                        domain = _normalise_domain(raw_url)
+                    if domain is None:
+                        domain = _extract_domain_from_title(title)
+                    # domain stays None → recorded as OTHER_BROWSER in get_domain_summary
+
                 category = _classify_app(proc_name, domain)
                 app_name = _friendly_app_name(proc_name)
 

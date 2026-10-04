@@ -1,3 +1,6 @@
 @echo off
 cd /d "%~dp0backend"
+echo Installing Python dependencies...
+pip install -r requirements.txt -q
+echo Starting backend...
 python main.py
