@@ -44,6 +44,7 @@ export async function getHistory() {
 
 export async function getSessionDetail(id) {
   const res = await fetch(`${BASE}/api/history/${id}`);
+  if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 

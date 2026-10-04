@@ -72,6 +72,7 @@ export default function ActiveSession() {
   const tickRef = useRef(null);
   const strikeAudioRef = useRef(null);
   const socialAudioRef = useRef(null);
+  const endingRef = useRef(false);
 
   const [session, setSession] = useState(null);
   const [camera, setCamera] = useState({ face_detected: false, yaw: 0, looking_away: false, calibrated: false });
@@ -162,6 +163,8 @@ export default function ActiveSession() {
   }, [remaining]);
 
   async function handleEnd() {
+    if (endingRef.current) return;
+    endingRef.current = true;
     clearInterval(tickRef.current);
     wsRef.current?.close();
     const audio = socialAudioRef.current;
