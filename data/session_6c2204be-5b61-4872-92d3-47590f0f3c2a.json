@@ -1,0 +1,79 @@
+{
+  "session_id": "6c2204be-5b61-4872-92d3-47590f0f3c2a",
+  "task": "CSE 320",
+  "planned_seconds": 3000,
+  "actual_seconds": 90,
+  "camera_on_screen_seconds": 90,
+  "camera_away_seconds": 0,
+  "distracting_seconds": 15,
+  "productive_seconds": 1,
+  "neutral_seconds": 29,
+  "strike_count": 0,
+  "strikes": [],
+  "app_summary": {
+    "Google Chrome": 45
+  },
+  "domain_summary": {
+    "reddit.com": 15,
+    "docs.google.com": 1
+  },
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791115360.3427186,
+      "end": 1791115369.351851,
+      "duration": 9,
+      "start_fmt": "08:02"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "reddit.com",
+      "category": "distracting",
+      "start": 1791115369.351851,
+      "end": 1791115384.3643806,
+      "duration": 15,
+      "start_fmt": "08:02"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791115384.3643806,
+      "end": 1791115391.3698974,
+      "duration": 7,
+      "start_fmt": "08:03"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "docs.google.com",
+      "category": "productive",
+      "start": 1791115391.3698974,
+      "end": 1791115392.3704696,
+      "duration": 1,
+      "start_fmt": "08:03"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791115392.3704696,
+      "end": 1791115405.3839586,
+      "duration": 13,
+      "start_fmt": "08:03"
+    }
+  ],
+  "biggest_distraction": "reddit.com",
+  "longest_continuous_distraction_seconds": 15,
+  "insights": [
+    "You spent 17% of this session on potentially distracting activity.",
+    "You were screen-directed for approximately 100% of the session."
+  ],
+  "saved_at": 1791115405.3855298
+}

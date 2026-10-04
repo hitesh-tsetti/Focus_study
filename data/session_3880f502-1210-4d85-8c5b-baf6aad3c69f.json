@@ -1,0 +1,64 @@
+{
+  "session_id": "3880f502-1210-4d85-8c5b-baf6aad3c69f",
+  "task": "CSE 320",
+  "planned_seconds": 1500,
+  "actual_seconds": 172,
+  "camera_on_screen_seconds": 172,
+  "camera_away_seconds": 1,
+  "distracting_seconds": 0,
+  "productive_seconds": 0,
+  "neutral_seconds": 168,
+  "strike_count": 1,
+  "strikes": [
+    {
+      "number": 1,
+      "reason": "looking_away",
+      "timestamp": 1791115138.423965
+    }
+  ],
+  "app_summary": {
+    "Google Chrome": 168
+  },
+  "domain_summary": {
+    "webwork2c.math": 1
+  },
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791115127.1865544,
+      "end": 1791115246.2952228,
+      "duration": 119,
+      "start_fmt": "07:58"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "webwork2c.math",
+      "category": "neutral",
+      "start": 1791115246.2952228,
+      "end": 1791115247.2959235,
+      "duration": 1,
+      "start_fmt": "08:00"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791115247.2959235,
+      "end": 1791115295.3486562,
+      "duration": 48,
+      "start_fmt": "08:00"
+    }
+  ],
+  "biggest_distraction": null,
+  "longest_continuous_distraction_seconds": 0,
+  "insights": [
+    "You had 1 focus strike during this session.",
+    "You were screen-directed for approximately 100% of the session."
+  ],
+  "saved_at": 1791115295.351264
+}

@@ -1,0 +1,58 @@
+{
+  "session_id": "cdf7a280-57ae-4b37-99b6-60ef1dded379",
+  "task": "CSE",
+  "planned_seconds": 1500,
+  "actual_seconds": 89,
+  "camera_on_screen_seconds": 89,
+  "camera_away_seconds": 0,
+  "distracting_seconds": 11,
+  "productive_seconds": 0,
+  "neutral_seconds": 14,
+  "strike_count": 0,
+  "strikes": [],
+  "app_summary": {
+    "Google Chrome": 25
+  },
+  "domain_summary": {
+    "reddit.com": 11
+  },
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791114893.2028263,
+      "end": 1791114897.205926,
+      "duration": 4,
+      "start_fmt": "07:54"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "reddit.com",
+      "category": "distracting",
+      "start": 1791114897.205926,
+      "end": 1791114908.2150207,
+      "duration": 11,
+      "start_fmt": "07:54"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791114908.2150207,
+      "end": 1791114918.2263663,
+      "duration": 10,
+      "start_fmt": "07:55"
+    }
+  ],
+  "biggest_distraction": "reddit.com",
+  "longest_continuous_distraction_seconds": 11,
+  "insights": [
+    "You spent 12% of this session on potentially distracting activity.",
+    "You were screen-directed for approximately 100% of the session."
+  ],
+  "saved_at": 1791114918.227402
+}

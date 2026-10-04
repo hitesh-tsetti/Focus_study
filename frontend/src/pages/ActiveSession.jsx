@@ -12,12 +12,6 @@ function fmt(secs) {
   return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
 }
 
-const SOCIAL_MEDIA_DOMAINS = [
-  "instagram.com", "tiktok.com", "twitter.com", "x.com",
-  "facebook.com", "threads.net", "pinterest.com", "reddit.com",
-  "9gag.com", "tumblr.com", "snapchat.com", "twitch.tv",
-];
-
 const EDUCATIONAL_KEYWORDS = [
   "tutorial", "lecture", "course", "how to", "howto", "learn",
   "study", "explained", "introduction", "crash course", "university",
@@ -26,14 +20,27 @@ const EDUCATIONAL_KEYWORDS = [
   "science", "history", "cs50", "freecodecamp", "full stack", "bootcamp",
 ];
 
-function isSocialMediaHijack(activity) {
+function loadBannedSites() {
+  try {
+    const saved = localStorage.getItem("focusStudy_bannedSites");
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return [
+    "instagram.com", "tiktok.com", "twitter.com", "x.com",
+    "facebook.com", "threads.net", "pinterest.com", "reddit.com",
+    "9gag.com", "tumblr.com", "snapchat.com", "twitch.tv", "youtube.com",
+  ];
+}
+
+function isSocialMediaHijack(activity, bannedSites) {
   if (!activity?.domain) return false;
   const domain = activity.domain.toLowerCase();
   if (domain.includes("youtube.com") || domain.includes("youtu.be")) {
+    if (!bannedSites.includes("youtube.com")) return false;
     const title = (activity.window_title || "").toLowerCase();
     return !EDUCATIONAL_KEYWORDS.some((kw) => title.includes(kw));
   }
-  return SOCIAL_MEDIA_DOMAINS.some((d) => domain.includes(d));
+  return bannedSites.some((d) => domain.includes(d));
 }
 
 function CameraFeed({ videoRef, faceWarning, lookingAway }) {
@@ -78,6 +85,8 @@ export default function ActiveSession() {
   const endingRef = useRef(false);
   const tabTimerRef = useRef(null);
   const tabAlarmActiveRef = useRef(false); // sync ref for closure access
+
+  const bannedSitesRef = useRef(loadBannedSites());
 
   const [session, setSession] = useState(null);
   const [camera, setCamera] = useState({ face_detected: false, yaw: 0, looking_away: false, calibrated: false });
@@ -143,7 +152,7 @@ export default function ActiveSession() {
     if (!act) return;
     setActivity(act);
 
-    if (isSocialMediaHijack(act)) {
+    if (isSocialMediaHijack(act, bannedSitesRef.current)) {
       // Already alarming — do nothing extra
       if (tabAlarmActiveRef.current) return;
       // Timer already running — do nothing extra
