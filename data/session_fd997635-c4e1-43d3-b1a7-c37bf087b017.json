@@ -1,0 +1,35 @@
+{
+  "session_id": "fd997635-c4e1-43d3-b1a7-c37bf087b017",
+  "task": "CSE 320 Exam Preparation",
+  "planned_seconds": 3000,
+  "actual_seconds": 11,
+  "camera_on_screen_seconds": 11,
+  "camera_away_seconds": 0,
+  "distracting_seconds": 0,
+  "productive_seconds": 9,
+  "neutral_seconds": 0,
+  "strike_count": 0,
+  "strikes": [],
+  "app_summary": {
+    "VS Code": 9
+  },
+  "domain_summary": {},
+  "timeline": [
+    {
+      "app": "VS Code",
+      "process": "code",
+      "domain": null,
+      "category": "productive",
+      "start": 1791093800.3847964,
+      "end": 1791093809.3928754,
+      "duration": 9,
+      "start_fmt": "02:03"
+    }
+  ],
+  "biggest_distraction": null,
+  "longest_continuous_distraction_seconds": 0,
+  "insights": [
+    "You were screen-directed for approximately 100% of the session."
+  ],
+  "saved_at": 1791093809.3939905
+}

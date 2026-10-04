@@ -1,0 +1,109 @@
+{
+  "session_id": "053fecfc-2e6f-4145-ac2e-5e7db2cfba51",
+  "task": "CSE 320",
+  "planned_seconds": 1500,
+  "actual_seconds": 39,
+  "camera_on_screen_seconds": 15,
+  "camera_away_seconds": 24,
+  "distracting_seconds": 0,
+  "productive_seconds": 5,
+  "neutral_seconds": 32,
+  "strike_count": 2,
+  "strikes": [
+    {
+      "number": 1,
+      "reason": "looking_away",
+      "timestamp": 1791098457.6360009
+    },
+    {
+      "number": 2,
+      "reason": "looking_away",
+      "timestamp": 1791098465.7160366
+    }
+  ],
+  "app_summary": {
+    "Google Chrome": 30,
+    "VS Code": 5,
+    "File Explorer": 2
+  },
+  "domain_summary": {},
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791098453.1758204,
+      "end": 1791098465.192945,
+      "duration": 12,
+      "start_fmt": "03:20"
+    },
+    {
+      "app": "File Explorer",
+      "process": "explorer",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791098465.192945,
+      "end": 1791098466.1942196,
+      "duration": 1,
+      "start_fmt": "03:21"
+    },
+    {
+      "app": "VS Code",
+      "process": "code",
+      "domain": null,
+      "category": "productive",
+      "start": 1791098466.1942196,
+      "end": 1791098468.1967022,
+      "duration": 2,
+      "start_fmt": "03:21"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791098468.1967022,
+      "end": 1791098470.1984594,
+      "duration": 2,
+      "start_fmt": "03:21"
+    },
+    {
+      "app": "File Explorer",
+      "process": "explorer",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791098470.1984594,
+      "end": 1791098471.1995437,
+      "duration": 1,
+      "start_fmt": "03:21"
+    },
+    {
+      "app": "VS Code",
+      "process": "code",
+      "domain": null,
+      "category": "productive",
+      "start": 1791098471.1995437,
+      "end": 1791098474.2044747,
+      "duration": 3,
+      "start_fmt": "03:21"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791098474.2044747,
+      "end": 1791098490.2240272,
+      "duration": 16,
+      "start_fmt": "03:21"
+    }
+  ],
+  "biggest_distraction": null,
+  "longest_continuous_distraction_seconds": 0,
+  "insights": [
+    "You had 2 focus strikes during this session.",
+    "You were screen-directed for approximately 39% of the session."
+  ],
+  "saved_at": 1791098490.2259815
+}

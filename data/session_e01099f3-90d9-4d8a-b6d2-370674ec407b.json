@@ -1,0 +1,35 @@
+{
+  "session_id": "e01099f3-90d9-4d8a-b6d2-370674ec407b",
+  "task": "CSE 320",
+  "planned_seconds": 1500,
+  "actual_seconds": 14,
+  "camera_on_screen_seconds": 14,
+  "camera_away_seconds": 0,
+  "distracting_seconds": 0,
+  "productive_seconds": 0,
+  "neutral_seconds": 5,
+  "strike_count": 0,
+  "strikes": [],
+  "app_summary": {
+    "Google Chrome": 5
+  },
+  "domain_summary": {},
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791098815.0297954,
+      "end": 1791098820.035769,
+      "duration": 5,
+      "start_fmt": "03:26"
+    }
+  ],
+  "biggest_distraction": null,
+  "longest_continuous_distraction_seconds": 0,
+  "insights": [
+    "You were screen-directed for approximately 100% of the session."
+  ],
+  "saved_at": 1791098820.0371213
+}

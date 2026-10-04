@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip list *)",
+      "Bash(pip --version)",
+      "Bash(npm --version)",
+      "Bash(py -3.11 --version)",
+      "Bash(py -3.10 --version)",
+      "Bash(py -3.9 --version)",
+      "Bash(npm create *)",
+      "Bash(python -c ' *)",
+      "Bash(python *)",
+      "Bash(curl -L \"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task\" -o /c/Users/venka/Downloads/Focus_study/backend/face_landmarker.task)",
+      "Bash(curl -s http://localhost:8000/api/session/status)",
+      "Bash(curl *)",
+      "Bash(pkill -f \"python main.py\")",
+      "Bash(npm run *)",
+      "Bash(awk '{print $5}')",
+      "Bash(xargs -r taskkill //PID //F)",
+      "Bash(taskkill //PID 31840 //F)"
+    ]
+  }
+}

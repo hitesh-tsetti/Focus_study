@@ -1,0 +1,73 @@
+{
+  "session_id": "c45f014a-83fc-48dd-9aaf-c221f259efa4",
+  "task": "CSE 320",
+  "planned_seconds": 3000,
+  "actual_seconds": 70,
+  "camera_on_screen_seconds": 66,
+  "camera_away_seconds": 3,
+  "distracting_seconds": 0,
+  "productive_seconds": 0,
+  "neutral_seconds": 58,
+  "strike_count": 3,
+  "strikes": [
+    {
+      "number": 1,
+      "reason": "looking_away",
+      "timestamp": 1791097013.497691
+    },
+    {
+      "number": 2,
+      "reason": "looking_away",
+      "timestamp": 1791097024.7247329
+    },
+    {
+      "number": 3,
+      "reason": "looking_away",
+      "timestamp": 1791097060.5514894
+    }
+  ],
+  "app_summary": {
+    "Google Chrome": 57,
+    "Snippingtool": 1
+  },
+  "domain_summary": {},
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791097002.9350095,
+      "end": 1791097009.9432142,
+      "duration": 7,
+      "start_fmt": "02:56"
+    },
+    {
+      "app": "Snippingtool",
+      "process": "snippingtool",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791097009.9432142,
+      "end": 1791097010.9438157,
+      "duration": 1,
+      "start_fmt": "02:56"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791097010.9438157,
+      "end": 1791097060.990997,
+      "duration": 50,
+      "start_fmt": "02:56"
+    }
+  ],
+  "biggest_distraction": null,
+  "longest_continuous_distraction_seconds": 0,
+  "insights": [
+    "You had 3 focus strikes during this session.",
+    "You were screen-directed for approximately 95% of the session."
+  ],
+  "saved_at": 1791097068.68291
+}

@@ -1,0 +1,52 @@
+{
+  "session_id": "f27de71f-5a4c-40d4-b18e-168823ee330e",
+  "task": "cSE 320",
+  "planned_seconds": 3000,
+  "actual_seconds": 51,
+  "camera_on_screen_seconds": 45,
+  "camera_away_seconds": 5,
+  "distracting_seconds": 0,
+  "productive_seconds": 0,
+  "neutral_seconds": 27,
+  "strike_count": 3,
+  "strikes": [
+    {
+      "number": 1,
+      "reason": "looking_away",
+      "timestamp": 1791100086.4285016
+    },
+    {
+      "number": 2,
+      "reason": "looking_away",
+      "timestamp": 1791100091.102683
+    },
+    {
+      "number": 3,
+      "reason": "looking_away",
+      "timestamp": 1791100097.7290297
+    }
+  ],
+  "app_summary": {
+    "Google Chrome": 27
+  },
+  "domain_summary": {},
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791100070.7232466,
+      "end": 1791100097.750041,
+      "duration": 27,
+      "start_fmt": "03:47"
+    }
+  ],
+  "biggest_distraction": null,
+  "longest_continuous_distraction_seconds": 0,
+  "insights": [
+    "You had 3 focus strikes during this session.",
+    "You were screen-directed for approximately 89% of the session."
+  ],
+  "saved_at": 1791100113.9082086
+}
