@@ -1,0 +1,58 @@
+{
+  "session_id": "eac44430-519f-46b6-b5fd-9b9549628389",
+  "task": "CSE",
+  "planned_seconds": 3000,
+  "actual_seconds": 114,
+  "camera_on_screen_seconds": 114,
+  "camera_away_seconds": 0,
+  "distracting_seconds": 14,
+  "productive_seconds": 0,
+  "neutral_seconds": 95,
+  "strike_count": 0,
+  "strikes": [],
+  "app_summary": {
+    "Google Chrome": 109
+  },
+  "domain_summary": {
+    "instagram.com": 14
+  },
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791113531.0553353,
+      "end": 1791113620.1572554,
+      "duration": 89,
+      "start_fmt": "07:32"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "instagram.com",
+      "category": "distracting",
+      "start": 1791113620.1572554,
+      "end": 1791113634.1709325,
+      "duration": 14,
+      "start_fmt": "07:33"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791113634.1709325,
+      "end": 1791113640.1767213,
+      "duration": 6,
+      "start_fmt": "07:33"
+    }
+  ],
+  "biggest_distraction": "instagram.com",
+  "longest_continuous_distraction_seconds": 14,
+  "insights": [
+    "You spent 12% of this session on potentially distracting activity.",
+    "You were screen-directed for approximately 100% of the session."
+  ],
+  "saved_at": 1791113640.1785386
+}

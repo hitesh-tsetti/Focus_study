@@ -65,6 +65,28 @@ DOMAIN_PATTERNS = [
     re.compile(r'(?:https?://)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(?:/[^\s]*)?'),
 ]
 
+# Maps title keywords → canonical domain for sites that don't show their URL in the title
+TITLE_KEYWORD_TO_DOMAIN = {
+    "instagram": "instagram.com",
+    "tiktok": "tiktok.com",
+    "facebook": "facebook.com",
+    "twitter": "twitter.com",
+    "reddit": "reddit.com",
+    "youtube": "youtube.com",
+    "twitch": "twitch.tv",
+    "netflix": "netflix.com",
+    "hulu": "hulu.com",
+    "disney+": "disneyplus.com",
+    "pinterest": "pinterest.com",
+    "snapchat": "snapchat.com",
+    "linkedin": "linkedin.com",
+    "gmail": "mail.google.com",
+    "google docs": "docs.google.com",
+    "google sheets": "docs.google.com",
+    "github": "github.com",
+    "stackoverflow": "stackoverflow.com",
+}
+
 
 @dataclass
 class ActivityEvent:
@@ -102,15 +124,22 @@ def _get_active_window_info():
 def _extract_domain_from_title(title: str) -> Optional[str]:
     """
     Try to extract a domain from a browser window title.
-    Browsers often include the URL or domain in the title bar.
+    First checks explicit URL patterns, then falls back to title keyword matching
+    for sites like Instagram that only show a page title (not the URL).
     """
     for pattern in DOMAIN_PATTERNS:
         m = pattern.search(title)
         if m:
             domain = m.group(1).lower()
-            # Filter out false positives
             if "." in domain and len(domain) > 4:
                 return domain
+
+    # Fallback: match known site names in the page title
+    title_lower = title.lower()
+    for keyword, domain in TITLE_KEYWORD_TO_DOMAIN.items():
+        if keyword in title_lower:
+            return domain
+
     return None
 
 

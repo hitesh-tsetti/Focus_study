@@ -1,0 +1,70 @@
+{
+  "session_id": "4eb3adb4-4b11-4ec3-a849-95fb7badd6c3",
+  "task": "CSE",
+  "planned_seconds": 3000,
+  "actual_seconds": 58,
+  "camera_on_screen_seconds": 57,
+  "camera_away_seconds": 1,
+  "distracting_seconds": 19,
+  "productive_seconds": 0,
+  "neutral_seconds": 33,
+  "strike_count": 2,
+  "strikes": [
+    {
+      "number": 1,
+      "reason": "looking_away",
+      "timestamp": 1791113353.7600532
+    },
+    {
+      "number": 2,
+      "reason": "looking_away",
+      "timestamp": 1791113390.0410478
+    }
+  ],
+  "app_summary": {
+    "Google Chrome": 52
+  },
+  "domain_summary": {
+    "instagram.com": 19
+  },
+  "timeline": [
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791113342.145664,
+      "end": 1791113360.1600919,
+      "duration": 18,
+      "start_fmt": "07:29"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": "instagram.com",
+      "category": "distracting",
+      "start": 1791113360.1600919,
+      "end": 1791113379.182152,
+      "duration": 19,
+      "start_fmt": "07:29"
+    },
+    {
+      "app": "Google Chrome",
+      "process": "chrome",
+      "domain": null,
+      "category": "neutral",
+      "start": 1791113379.182152,
+      "end": 1791113394.2021806,
+      "duration": 15,
+      "start_fmt": "07:29"
+    }
+  ],
+  "biggest_distraction": "instagram.com",
+  "longest_continuous_distraction_seconds": 19,
+  "insights": [
+    "You spent 33% of this session on potentially distracting activity.",
+    "You had 2 focus strikes during this session.",
+    "You were screen-directed for approximately 99% of the session."
+  ],
+  "saved_at": 1791113394.2033558
+}

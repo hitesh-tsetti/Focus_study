@@ -66,6 +66,9 @@ function CameraFeed({ videoRef, faceWarning, lookingAway }) {
   );
 }
 
+const MAX_TAB_INCIDENTS = 3;
+const TAB_GRACE_SECONDS = 10;
+
 export default function ActiveSession() {
   const nav = useNavigate();
   const wsRef = useRef(null);
@@ -73,6 +76,8 @@ export default function ActiveSession() {
   const strikeAudioRef = useRef(null);
   const socialAudioRef = useRef(null);
   const endingRef = useRef(false);
+  const tabTimerRef = useRef(null);
+  const tabAlarmActiveRef = useRef(false); // sync ref for closure access
 
   const [session, setSession] = useState(null);
   const [camera, setCamera] = useState({ face_detected: false, yaw: 0, looking_away: false, calibrated: false });
@@ -82,6 +87,11 @@ export default function ActiveSession() {
   const [faceWarning, setFaceWarning] = useState(false);
   const [strikeFlash, setStrikeFlash] = useState(false);
   const [remaining, setRemaining] = useState(null);
+  const [tabAlarmActive, setTabAlarmActive] = useState(false);
+  const [tabIncidents, setTabIncidents] = useState(0);
+  const [tabBreakForced, setTabBreakForced] = useState(false);
+  const [tabCountdown, setTabCountdown] = useState(null); // seconds until alarm fires
+  const tabCountdownRef = useRef(null);
 
   // Browser-based face detection — streams face events to backend via WebSocket
   const { videoRef: faceVideoRef, setOnFrame } = useFaceDetector();
@@ -102,17 +112,69 @@ export default function ActiveSession() {
     };
   }, []);
 
+  const fireTabAlarm = useCallback(() => {
+    tabTimerRef.current = null;
+    clearInterval(tabCountdownRef.current);
+    tabCountdownRef.current = null;
+    setTabCountdown(null);
+
+    if (tabAlarmActiveRef.current) return; // already ringing
+    tabAlarmActiveRef.current = true;
+    setTabAlarmActive(true);
+
+    setTabIncidents(prev => {
+      const next = prev + 1;
+      if (next >= MAX_TAB_INCIDENTS) setTabBreakForced(true);
+      return next;
+    });
+
+    const audio = socialAudioRef.current;
+    if (audio) audio.play().catch(() => {});
+  }, []);
+
+  const handleBackOnTask = useCallback(() => {
+    tabAlarmActiveRef.current = false;
+    setTabAlarmActive(false);
+    const audio = socialAudioRef.current;
+    if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
+  }, []);
+
   const updateActivity = useCallback((act) => {
     if (!act) return;
     setActivity(act);
-    const audio = socialAudioRef.current;
-    if (!audio) return;
+
     if (isSocialMediaHijack(act)) {
-      if (audio.paused) audio.play().catch(() => {});
+      // Already alarming — do nothing extra
+      if (tabAlarmActiveRef.current) return;
+      // Timer already running — do nothing extra
+      if (tabTimerRef.current) return;
+
+      // Start grace period countdown
+      let remaining = TAB_GRACE_SECONDS;
+      setTabCountdown(remaining);
+      tabCountdownRef.current = setInterval(() => {
+        remaining -= 1;
+        setTabCountdown(remaining);
+        if (remaining <= 0) {
+          clearInterval(tabCountdownRef.current);
+          tabCountdownRef.current = null;
+        }
+      }, 1000);
+
+      tabTimerRef.current = setTimeout(fireTabAlarm, TAB_GRACE_SECONDS * 1000);
     } else {
-      if (!audio.paused) { audio.pause(); audio.currentTime = 0; }
+      // Left the banned site — cancel pending timer but keep alarm ringing if it fired
+      if (tabTimerRef.current) {
+        clearTimeout(tabTimerRef.current);
+        tabTimerRef.current = null;
+      }
+      if (tabCountdownRef.current) {
+        clearInterval(tabCountdownRef.current);
+        tabCountdownRef.current = null;
+        setTabCountdown(null);
+      }
     }
-  }, []);
+  }, [fireTabAlarm]);
 
   const handleEvent = useCallback((msg) => {
     const { event, data } = msg;
@@ -166,6 +228,8 @@ export default function ActiveSession() {
     if (endingRef.current) return;
     endingRef.current = true;
     clearInterval(tickRef.current);
+    if (tabTimerRef.current) { clearTimeout(tabTimerRef.current); tabTimerRef.current = null; }
+    if (tabCountdownRef.current) { clearInterval(tabCountdownRef.current); tabCountdownRef.current = null; }
     wsRef.current?.close();
     const audio = socialAudioRef.current;
     if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
@@ -308,6 +372,72 @@ export default function ActiveSession() {
 
         </div>
       </div>
+
+      {/* Countdown warning strip */}
+      {tabCountdown !== null && !tabAlarmActive && (
+        <div style={{
+          position: "fixed", bottom: 0, left: 0, right: 0,
+          background: "rgba(234,179,8,0.15)", borderTop: "2px solid var(--yellow)",
+          padding: "12px 24px", zIndex: 150,
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+        }}>
+          <AlertTriangle size={18} color="var(--yellow)" />
+          <span style={{ color: "var(--yellow)", fontWeight: 600 }}>
+            Banned site detected — alarm in {tabCountdown}s
+          </span>
+        </div>
+      )}
+
+      {/* Tab alarm overlay */}
+      {tabAlarmActive && !tabBreakForced && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)",
+          zIndex: 200, display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", gap: 20,
+          padding: 24,
+        }}>
+          <div style={{ fontSize: "3rem" }}>🚨</div>
+          <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--red)", textAlign: "center" }}>
+            GET BACK ON TASK
+          </h2>
+          <p style={{ color: "var(--text-dim)", textAlign: "center", maxWidth: 320 }}>
+            You've been on a banned site for too long. Return to your work and click the button below.
+          </p>
+          <p style={{ color: "var(--yellow)", fontSize: "0.82rem" }}>
+            Warning {tabIncidents} of {MAX_TAB_INCIDENTS}
+          </p>
+          <button
+            className="btn-primary"
+            style={{ fontSize: "1rem", padding: "12px 32px" }}
+            onClick={handleBackOnTask}
+          >
+            I'm back on task
+          </button>
+        </div>
+      )}
+
+      {/* Forced break overlay */}
+      {tabBreakForced && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)",
+          zIndex: 300, display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", gap: 20,
+          padding: 24,
+        }}>
+          <div style={{ fontSize: "3rem" }}>😵</div>
+          <h2 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--red)", textAlign: "center" }}>
+            Time for a Break
+          </h2>
+          <p style={{ color: "var(--text-dim)", textAlign: "center", maxWidth: 340 }}>
+            You went off task {MAX_TAB_INCIDENTS} times. Step away from the screen for a few minutes, then come back fresh.
+          </p>
+          <div className="stack" style={{ gap: 10, width: "100%", maxWidth: 280 }}>
+            <button className="btn-primary" onClick={() => nav("/create")}>Start Fresh Session</button>
+            <button className="btn-secondary" onClick={handleEnd}>View Summary</button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
